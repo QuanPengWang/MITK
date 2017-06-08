@@ -30,9 +30,9 @@ namespace itk{
 template< class OutputImageType >
 TractDensityImageFilter< OutputImageType >::TractDensityImageFilter()
     : m_InvertImage(false)
-    , m_FiberBundle(NULL)
+    , m_FiberBundle(nullptr)
     , m_UpsamplingFactor(1)
-    , m_InputImage(NULL)
+    , m_InputImage(nullptr)
     , m_BinaryOutput(false)
     , m_UseImageGeometry(false)
     , m_OutputAbsoluteValues(false)
@@ -132,9 +132,9 @@ void TractDensityImageFilter< OutputImageType >::GenerateData()
     else
         minSpacing = newSpacing[2];
 
-    MITK_INFO << "TractDensityImageFilter: resampling fibers to ensure sufficient voxel coverage";
     if (m_DoFiberResampling)
     {
+      MITK_INFO << "TractDensityImageFilter: resampling fibers to ensure sufficient voxel coverage";
       if (m_WorkOnFiberCopy)
         m_FiberBundle = m_FiberBundle->GetDeepCopy();
       m_FiberBundle->ResampleLinear(minSpacing/10);

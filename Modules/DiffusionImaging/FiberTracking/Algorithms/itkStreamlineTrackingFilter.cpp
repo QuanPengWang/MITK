@@ -36,9 +36,9 @@ StreamlineTrackingFilter
 ::StreamlineTrackingFilter()
     : m_PauseTracking(false)
     , m_AbortTracking(false)
-    , m_FiberPolyData(NULL)
-    , m_Points(NULL)
-    , m_Cells(NULL)
+    , m_FiberPolyData(nullptr)
+    , m_Points(nullptr)
+    , m_Cells(nullptr)
     , m_AngularThreshold(-1)
     , m_StepSize(0)
     , m_MaxLength(10000)
@@ -52,9 +52,9 @@ StreamlineTrackingFilter
     , m_UseStopVotes(true)
     , m_NumberOfSamples(30)
     , m_NumPreviousDirections(1)
-    , m_StoppingRegions(NULL)
-    , m_SeedImage(NULL)
-    , m_MaskImage(NULL)
+    , m_StoppingRegions(nullptr)
+    , m_SeedImage(nullptr)
+    , m_MaskImage(nullptr)
     , m_AposterioriCurvCheck(false)
     , m_AvoidStop(true)
     , m_DemoMode(false)
@@ -67,6 +67,7 @@ StreamlineTrackingFilter
     , m_AngularThresholdDeg(-1)
     , m_MaxNumTracts(-1)
     , m_Random(true)
+    , m_Verbose(true)
 {
     this->SetNumberOfRequiredInputs(0);
 }
@@ -498,7 +499,7 @@ float StreamlineTrackingFilter::FollowStreamline(itk::Point<float, 3> pos, vnl_v
 {
     vnl_vector_fixed<float,3> zero_dir; zero_dir.fill(0.0);
     std::deque< vnl_vector_fixed<float,3> > last_dirs;
-    for (int i=0; i<m_NumPreviousDirections-1; i++)
+    for (unsigned int i=0; i<m_NumPreviousDirections-1; i++)
         last_dirs.push_back(zero_dir);
 
     for (int step=0; step< m_MaxLength/2; step++)
@@ -710,6 +711,10 @@ void StreamlineTrackingFilter::GenerateData()
     itk::Index<3> zeroIndex; zeroIndex.Fill(0);
     int progress = 0;
     int i = 0;
+    int print_interval = num_seeds/100;
+    if (print_interval<100)
+        m_Verbose=false;
+
 #pragma omp parallel
     while (i<num_seeds && !stop)
     {
@@ -719,10 +724,10 @@ void StreamlineTrackingFilter::GenerateData()
 
         if (temp_i>=num_seeds || stop)
             continue;
-
+        else if (m_Verbose && i%print_interval==0)
 #pragma omp critical
         {
-            progress++;
+            progress += print_interval;
             std::cout << "                                                                                                     \r";
             if (m_MaxNumTracts>0)
                 std::cout << "Tried: " << progress << "/" << num_seeds << " | Accepted: " << current_tracts << "/" << m_MaxNumTracts << '\r';
@@ -795,7 +800,7 @@ void StreamlineTrackingFilter::GenerateData()
                     m_Tractogram.push_back(fib);
                     current_tracts++;
                 }
-                if (m_MaxNumTracts>0 && current_tracts>=m_MaxNumTracts)
+                if (m_MaxNumTracts > 0 && current_tracts>=static_cast<unsigned int>(m_MaxNumTracts))
                 {
                     if (!stop)
                     {

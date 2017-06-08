@@ -18,11 +18,12 @@
 #define __vtkInternalOpenGLRenderWindow_h
 
 #include <vtkGenericOpenGLRenderWindow.h>
-#include <qopenglframebufferobject.h>
+#include <QOpenGLFramebufferObject>
 #include <QOpenGLFunctions>
 
 class QVTKFramebufferObjectRenderer;
 
+//! Part of Qml rendering prototype, see QmlMitkRenderWindowItem.
 class vtkInternalOpenGLRenderWindow : public vtkGenericOpenGLRenderWindow
 {
 public:

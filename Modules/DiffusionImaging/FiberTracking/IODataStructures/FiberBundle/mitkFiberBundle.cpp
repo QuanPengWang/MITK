@@ -120,7 +120,7 @@ mitk::FiberBundle::Pointer mitk::FiberBundle::AddBundle(mitk::FiberBundle* fib)
 {
     if (fib==nullptr)
     {
-        MITK_WARN << "trying to call AddBundle with NULL argument";
+        MITK_WARN << "trying to call AddBundle with nullptr argument";
         return nullptr;
     }
     MITK_INFO << "Adding fibers";
@@ -1012,7 +1012,7 @@ std::vector<long> mitk::FiberBundle::ExtractFiberIdSubset(DataNode *roi, DataSto
                 result.push_back(i);
 
             std::vector<long>::iterator it;
-            for (long i=0; i<children->Size(); ++i)
+            for (unsigned int i=0; i<children->Size(); ++i)
             {
                 std::vector<long> inRoi = ExtractFiberIdSubset(children->ElementAt(i), storage);
 
@@ -2160,7 +2160,7 @@ bool mitk::FiberBundle::Equals(mitk::FiberBundle* fib, double eps)
 {
     if (fib==nullptr)
     {
-        MITK_INFO << "Reference bundle is NULL!";
+        MITK_INFO << "Reference bundle is nullptr!";
         return false;
     }
 
